@@ -9,6 +9,7 @@
 #define pinLed D7 //led que indica que o esp8266 est� ligado
 #define led1 D5  //led  vermelho na porta D5 do esp8266
 #define led2 D4  // led azul na porta D4 do esp8266
+#define rele D8
 
 
 DHT dht(DHTPIN, DHTTYPE);
@@ -36,6 +37,7 @@ void setup() {
 	pinMode(pinLed,OUTPUT);//led pisca
 	pinMode(led1,OUTPUT);  //led vermelho controle pelo Dashboard
 	pinMode(led2,OUTPUT);  //led azul controle pelo Dashboard
+	pinMode(rele, OUTPUT);
 }
 
 void loop() {
@@ -75,7 +77,6 @@ CAYENNE_OUT_DEFAULT()
 	//Cayenne.celsiusWrite()
 	Cayenne.digitalSensorWrite(0,h); //'cannel 0' recebe umidade
 	Cayenne.celsiusWrite(1, t);     // 'cannel 1 recebe temperatura
-  Cayenne.virtualWrite(2, )
 	
 	//Cayenne.virtualWrite(3, 50, TYPE_PROXIMITY, UNIT_CENTIMETER);
 
@@ -86,6 +87,8 @@ CAYENNE_OUT_DEFAULT()
 CAYENNE_IN_DEFAULT()
 {
 	CAYENNE_LOG("Channel %u, value %s", request.channel, getValue.asString());
+	if(t > 23)digitalWrite(rele,HIGH);
+	else digitalWrite(rele,LOW);
 	//Process message here. If there is an error set an error message using getValue.setError(), e.g getValue.setError("Error message");
 }
 
